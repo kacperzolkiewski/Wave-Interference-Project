@@ -195,7 +195,7 @@
              <string>SAVE TO FILE</string>
             </property>
            </widget>
-           <widget class="QToolButton" name="addSource1Btn">
+           <widget class="QPushButton" name="addSource1Btn">
             <property name="geometry">
              <rect>
               <x>0</x>
@@ -259,7 +259,7 @@
              <string>NEXT</string>
             </property>
            </widget>
-           <widget class="QToolButton" name="addSource2Btn">
+           <widget class="QPushButton" name="addSource2Btn">
             <property name="geometry">
              <rect>
               <x>110</x>
