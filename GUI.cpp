@@ -106,6 +106,8 @@ MyFrame2::MyFrame2(wxWindow* parent, wxWindowID id, const wxString& title, const
 	// Connect Events
 	m_panel2->Connect(wxEVT_UPDATE_UI, wxUpdateUIEventHandler(MyFrame2::onUpdateUI), NULL, this);
 	m_saveToFile->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MyFrame2::saveToFileClick), NULL, this);
+	m_addSource1->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MyFrame2::on_addSource1Click), NULL, this);
+	m_addSource2->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MyFrame2::on_addSource2Click), NULL, this);
 	m_sliderX->Connect(wxEVT_SCROLL_TOP, wxScrollEventHandler(MyFrame2::onScrollX), NULL, this);
 	m_sliderX->Connect(wxEVT_SCROLL_BOTTOM, wxScrollEventHandler(MyFrame2::onScrollX), NULL, this);
 	m_sliderX->Connect(wxEVT_SCROLL_LINEUP, wxScrollEventHandler(MyFrame2::onScrollX), NULL, this);
@@ -145,6 +147,8 @@ MyFrame2::~MyFrame2()
 	// Disconnect Events
 	m_panel2->Disconnect(wxEVT_UPDATE_UI, wxUpdateUIEventHandler(MyFrame2::onUpdateUI), NULL, this);
 	m_saveToFile->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MyFrame2::saveToFileClick), NULL, this);
+	m_addSource1->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MyFrame2::on_addSource1Click), NULL, this);
+	m_addSource2->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MyFrame2::on_addSource2Click), NULL, this);
 	m_sliderX->Disconnect(wxEVT_SCROLL_TOP, wxScrollEventHandler(MyFrame2::onScrollX), NULL, this);
 	m_sliderX->Disconnect(wxEVT_SCROLL_BOTTOM, wxScrollEventHandler(MyFrame2::onScrollX), NULL, this);
 	m_sliderX->Disconnect(wxEVT_SCROLL_LINEUP, wxScrollEventHandler(MyFrame2::onScrollX), NULL, this);

@@ -17,6 +17,16 @@ void GUIMyFrame::saveToFileClick(wxCommandEvent& event)
 	// TODO: Implement saveToFileClick
 }
 
+void GUIMyFrame::on_addSource1Click(wxCommandEvent& event)
+{
+	// TODO: Implement on_addSource1Click
+}
+
+void GUIMyFrame::on_addSource2Click(wxCommandEvent& event)
+{
+	// TODO: Implement on_addSource2Click
+}
+
 void GUIMyFrame::onScrollX(wxScrollEvent& event)
 {
 	// TODO: Implement onScrollX

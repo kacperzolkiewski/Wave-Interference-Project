@@ -52,6 +52,8 @@ protected:
 	// Virtual event handlers, overide them in your derived class
 	virtual void onUpdateUI(wxUpdateUIEvent& event) { event.Skip(); }
 	virtual void saveToFileClick(wxCommandEvent& event) { event.Skip(); }
+	virtual void on_addSource1Click(wxCommandEvent& event) { event.Skip(); }
+	virtual void on_addSource2Click(wxCommandEvent& event) { event.Skip(); }
 	virtual void onScrollX(wxScrollEvent& event) { event.Skip(); }
 	virtual void onScrollY(wxScrollEvent& event) { event.Skip(); }
 	virtual void onScrollZ(wxScrollEvent& event) { event.Skip(); }
