@@ -1,6 +1,7 @@
 #ifndef MYVECTOR_H
 #define MYVECTOR_H
 
+#include <iostream>
 
 class MyVector
 {
@@ -12,6 +13,8 @@ public:
     void set(double, double, double);
 
     double& operator[] (unsigned);
+
+    const double& operator[] (unsigned ) const;
 
     MyVector operator+ (const MyVector& ) const;
 

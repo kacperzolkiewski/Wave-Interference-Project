@@ -12,9 +12,10 @@ public:
 
     double* operator[](unsigned);
 
-    //matrix*matrix
+    //matrix * matrix
     Matrix operator* (const Matrix&) const;
 
+    //matrix * vector
     MyVector operator* (const MyVector&) const;
 
 private:
