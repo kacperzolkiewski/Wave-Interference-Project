@@ -1,19 +1,19 @@
 #pragma once
 #include <array>
-#include "vector4.h"
+#include "myVector.h"
 
-class Matrix
+class myMatrix
 {
 public:
-    Matrix();
+    myMatrix();
 
     std::array<double, 4>& operator[] (unsigned index);
 
     std::array<double, 4> operator[] (unsigned index) const;
 
-    Matrix operator* (const Matrix& obj) const;
+    myMatrix operator* (const myMatrix& obj) const;
 
-    Vector4 operator* (const Vector4& obj) const;
+    myVector operator* (const myVector& obj) const;
 
 
 public:

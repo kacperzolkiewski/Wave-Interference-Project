@@ -1,6 +1,6 @@
-#include "matrix.h"
+#include "myMatrix.h"
 
-Matrix::Matrix()
+myMatrix::myMatrix()
 {
     for (int i = 0; i < 4; ++i)
         for (int j = 0; j < 4; ++j)
@@ -8,18 +8,19 @@ Matrix::Matrix()
     data[3][3] = 1.0;
 }
 
-std::array<double, 4>& Matrix::operator[] (unsigned index)
+std::array<double, 4>& myMatrix::operator[] (unsigned index)
 {
     return data[index];
 }
 
-std::array<double, 4> Matrix::operator[] (unsigned index) const
+std::array<double, 4> myMatrix::operator[] (unsigned index) const
 {
     return data[index];
 }
-Matrix Matrix::operator* (const Matrix& obj) const
+
+myMatrix myMatrix::operator* (const myMatrix& obj) const
 {
-    Matrix result;
+    myMatrix result;
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
             result[i][j] = 0.0;
@@ -30,9 +31,9 @@ Matrix Matrix::operator* (const Matrix& obj) const
     return result;
 }
 
-Vector4 Matrix::operator* (const Vector4& obj) const
+myVector myMatrix::operator* (const myVector& obj) const
 {
-    Vector4 result;
+    myVector result;
     for (int i = 0; i < 4; ++i) {
         result[i] = 0.0;
         for (int j = 0; j < 4; ++j)

@@ -1,6 +1,6 @@
-#include "vector4.h"
+#include "myVector.h"
 
-Vector4::Vector4(double x, double y, double z)
+myVector::myVector(double x, double y, double z)
 {
     data[0] = x;
     data[1] = y;
@@ -8,34 +8,34 @@ Vector4::Vector4(double x, double y, double z)
     data[3] = 1.0;
 }
 
-void Vector4::set(double x, double y, double z)
+void myVector::set(double x, double y, double z)
 {
     data[0] = x;
     data[1] = y;
     data[2] = z;
 }
 
-double& Vector4::operator[] (unsigned index)
+double& myVector::operator[] (unsigned index)
 {
     return data[index];
 }
 
-const double& Vector4::operator[] (unsigned index) const
+const double& myVector::operator[] (unsigned index) const
 {
     return data[index];
 }
 
-Vector4 Vector4::operator+ (const Vector4& obj) const
+myVector myVector::operator+ (const myVector& obj) const
 {
-    Vector4 result;
+    myVector result;
     for (int i = 0; i < 4; ++i)
         result[i] += data[i] + obj.data[i];
     return result;
 }
 
-Vector4 Vector4::operator- (const Vector4& obj) const
+myVector myVector::operator- (const myVector& obj) const
 {
-    Vector4 result;
+    myVector result;
     for (int i = 0; i < 4; ++i)
         result[i] += data[i] - obj.data[i];
     return result;

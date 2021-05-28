@@ -3,9 +3,9 @@
 
 const double pi = 3.14159265359;
 
-Matrix set_rotation_x(double alpha)
+myMatrix set_rotation_x(double alpha)
 {
-    Matrix data;
+    myMatrix data;
     alpha = alpha * pi / 180.0;
     data[0][0] = 1.0;
     data[1][1] = data[2][2] = cos(alpha);
@@ -15,9 +15,9 @@ Matrix set_rotation_x(double alpha)
     return data;
 }
 
-Matrix set_rotation_y(double alpha)
+myMatrix set_rotation_y(double alpha)
 {
-    Matrix data;
+    myMatrix data;
     alpha = alpha * pi / 180.0;
     data[1][1] = 1.0;
     data[0][0] = data[2][2] = cos(alpha);
@@ -27,9 +27,9 @@ Matrix set_rotation_y(double alpha)
     return data;
 }
 
-Matrix set_rotation_z(double alpha)
+myMatrix set_rotation_z(double alpha)
 {
-    Matrix data;
+    myMatrix data;
     alpha = alpha * pi / 180.0;
     data[2][2] = 1.0;
     data[0][0] = data[1][1] = cos(alpha);
@@ -39,15 +39,15 @@ Matrix set_rotation_z(double alpha)
     return data;
 }
 
-Matrix set_rotation(double alpha_x, double alpha_y, double alpha_z)
+myMatrix set_rotation(double alpha_x, double alpha_y, double alpha_z)
 {
     return set_rotation_x(alpha_x) * set_rotation_y(alpha_y) * set_rotation_z(alpha_z);
 }
 
 
-Matrix set_scale(double scale)
+myMatrix set_scale(double scale)
 {
-    Matrix data;
+    myMatrix data;
 
     data[0][0] = scale;
     data[1][1] = scale;
@@ -56,9 +56,9 @@ Matrix set_scale(double scale)
     return data;
 }
 
-Matrix set_perspective()
+myMatrix set_perspective()
 {
-    Matrix data;
+    myMatrix data;
 
     for (int i = 0; i < 3; ++i)
         data[i][i] = 1.0;
@@ -69,9 +69,9 @@ Matrix set_perspective()
 }
 
 
-Matrix set_translation(double width, double height)
+myMatrix set_translation(double width, double height)
 {
-    Matrix data;
+    myMatrix data;
 
     for (int i = 0; i < 4; ++i)
         data[i][i] = 1.0;

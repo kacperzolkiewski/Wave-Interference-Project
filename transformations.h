@@ -1,19 +1,19 @@
 #pragma once
 
-#include "matrix.h"
+#include "myMatrix.h"
 
-Matrix set_rotation_x(double alpha);
+myMatrix set_rotation_x(double alpha);
 
-Matrix set_rotation_y(double alpha);
+myMatrix set_rotation_y(double alpha);
 
-Matrix set_rotation_z(double alpha);
+myMatrix set_rotation_z(double alpha);
 
-Matrix set_rotation(double alpha_x, double alpha_y, double alpha_z);
+myMatrix set_rotation(double alpha_x, double alpha_y, double alpha_z);
 
-Matrix set_scale(double scale);
+myMatrix set_scale(double scale);
 
-Matrix set_perspective();
+myMatrix set_perspective();
 
-Matrix set_translation(double width, double height);
+myMatrix set_translation(double width, double height);
 
 
