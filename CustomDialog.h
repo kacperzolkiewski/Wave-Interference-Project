@@ -1,80 +1,66 @@
-#pragma once
+///////////////////////////////////////////////////////////////////////////
+// C++ code generated with wxFormBuilder (version Jun 17 2015)
+// http://www.wxformbuilder.org/
+//
+// PLEASE DO "NOT" EDIT THIS FILE!
+///////////////////////////////////////////////////////////////////////////
+
+#ifndef __NONAME_H__
+#define __NONAME_H__
+
+#include <wx/artprov.h>
+#include <wx/xrc/xmlres.h>
+#include <wx/string.h>
+#include <wx/stattext.h>
+#include <wx/gdicmn.h>
+#include <wx/font.h>
+#include <wx/colour.h>
+#include <wx/settings.h>
+#include <wx/textctrl.h>
+#include <wx/sizer.h>
+#include <wx/statbox.h>
+#include <wx/button.h>
+#include <wx/dialog.h>
 #include <wx/wx.h>
 #include <array>
 #include <string>
-class CustomDialogAdd : public wxDialog {
-public:
-	CustomDialogAdd(const wxString& title) : wxDialog(NULL, -1, title, wxDefaultPosition, wxSize(300, 400)) {
 
-		wxPanel* panel = new wxPanel(this, -1);
-
-		wxBoxSizer* vbox = new wxBoxSizer(wxVERTICAL);
-		wxBoxSizer* hbox = new wxBoxSizer(wxHORIZONTAL);
-
-		wxStaticBox* st = new wxStaticBox(panel, -1, wxT("Parameters"),
-			wxPoint(5, 5), wxSize(250, 350));
-
-		wxTextCtrl* tc1 = new wxTextCtrl(panel, -1, wxT("X"), wxPoint(15, 60));
-		wxStaticText* t1 = new wxStaticText(panel, -1, wxT("Set X from [0 - 770]"), wxPoint(15, 30));
-		wxTextCtrl* tc2 = new wxTextCtrl(panel, -1, wxT("Y"), wxPoint(15, 120));
-		wxStaticText* t2 = new wxStaticText(panel, -1, wxT("Set Y from [0 - 235]"), wxPoint(15, 90));
-		wxTextCtrl* tc3 = new wxTextCtrl(panel, -1, wxT("Amplitude"), wxPoint(15, 180));
-		wxStaticText* t3 = new wxStaticText(panel, -1, wxT("Set Aplitude from (0 - 9.9]"), wxPoint(15, 150));
-		wxTextCtrl* tc4 = new wxTextCtrl(panel, -1, wxT("Frequency"), wxPoint(15, 240));
-		wxStaticText* t4 = new wxStaticText(panel, -1, wxT("Set Frequency from (0 - 9.9]"), wxPoint(15, 210));
+///////////////////////////////////////////////////////////////////////////
 
 
-		wxButton* okButton = new wxButton(this, wxID_OK, _("OK"),
-			wxDefaultPosition, wxSize(70, 30));
-		wxButton* closeButton = new wxButton(this, wxID_CANCEL, _("Cancel"),
-			wxDefaultPosition, wxSize(70, 30));
-
-		hbox->Add(okButton, 1);
-		hbox->Add(closeButton, 1, wxLEFT, 5);
-
-		vbox->Add(panel, 1);
-		vbox->Add(hbox, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, 10);
-
-		SetSizer(vbox);
-		Centre();
-		ShowModal();
-
-		x = atof(tc1->GetValue());
-		if (x < 0 || x > 770) {
-			add = false;
-			wxLogMessage("Wrong x parameter");
-		}
-		y = atof(tc2->GetValue());
-		if (y < 0 || y > 235) {
-			add = false;
-			wxLogMessage("Wrong y parameter");
-		}
-		amp = atof(tc3->GetValue());
-		if (amp <= 0 || amp > 9.9) {
-			add = false;
-			wxLogMessage("Wrong amp parameter");
-		}
-		freq = atof(tc4->GetValue());
-		if (freq <= 0 || freq > 9.9) {
-			add = false;
-			wxLogMessage("Wrong freq parameter");
-		}
-		Destroy();
-	}
-	wxPoint return_Point() const {
-		return wxPoint(x, y);
-	}
-	double get_x()const { return x; }
-	double get_y()const { return y; }
-	double return_freq()const {
-		return freq;
-	}
-	double return_amp()const {
-		return amp;
-	}
-	bool isOK()const { return add; }
+///////////////////////////////////////////////////////////////////////////////
+/// Class MyDialog
+///////////////////////////////////////////////////////////////////////////////
+class MyDialog : public wxDialog
+{
 private:
-	bool add = true;
-	double x, y, amp, freq;
+	bool flag = true;
+	double x, y, z, amplitude, frequency;
+protected:
+	wxStaticText* m_staticText1;
+	wxTextCtrl* m_textCtrl1;
+	wxStaticText* m_staticText2;
+	wxTextCtrl* m_textCtrl2;
+	wxStaticText* m_staticText3;
+	wxTextCtrl* m_textCtrl3;
+	wxStaticText* m_staticText4;
+	wxTextCtrl* m_textCtrl4;
+	wxStaticText* m_staticText5;
+	wxTextCtrl* m_textCtrl5;
+	wxStdDialogButtonSizer* m_sdbSizer1;
+	wxButton* m_sdbSizer1OK;
+	wxButton* m_sdbSizer1Cancel;
+
+public:
+
+	MyDialog(wxWindow* parent = NULL, wxWindowID id = wxID_ANY, const wxString& title = "Setting Parameters", const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(365, 418), long style = wxDEFAULT_DIALOG_STYLE | wxSIMPLE_BORDER);
+	~MyDialog();
+	bool running() const { return flag; }
+	const auto get_x() const { return x; }
+	const auto get_y() const { return y; }
+	const auto get_z() const { return z; }
+	const auto get_amplitude() const { return amplitude; }
+	const auto get_frequency() const { return frequency; }
 };
 
+#endif //__NONAME_H__
