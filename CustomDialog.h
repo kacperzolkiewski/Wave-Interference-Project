@@ -34,15 +34,15 @@
 class MyDialog : public wxDialog
 {
 private:
-	bool flag = true;
-	double x, y, z, amplitude, frequency;
+	bool add = true;
+	double x, y, amplitude, frequency;
 protected:
 	wxStaticText* m_staticText1;
 	wxTextCtrl* m_textCtrl1;
 	wxStaticText* m_staticText2;
 	wxTextCtrl* m_textCtrl2;
-	wxStaticText* m_staticText3;
-	wxTextCtrl* m_textCtrl3;
+	//wxStaticText* m_staticText3;
+	//wxTextCtrl* m_textCtrl3;
 	wxStaticText* m_staticText4;
 	wxTextCtrl* m_textCtrl4;
 	wxStaticText* m_staticText5;
@@ -55,10 +55,10 @@ public:
 
 	MyDialog(wxWindow* parent = NULL, wxWindowID id = wxID_ANY, const wxString& title = "Setting Parameters", const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(365, 418), long style = wxDEFAULT_DIALOG_STYLE | wxSIMPLE_BORDER);
 	~MyDialog();
-	bool running() const { return flag; }
+	bool running() const { return add; }
 	const auto get_x() const { return x; }
 	const auto get_y() const { return y; }
-	const auto get_z() const { return z; }
+	//const auto get_z() const { return z; }
 	const auto get_amplitude() const { return amplitude; }
 	const auto get_frequency() const { return frequency; }
 };

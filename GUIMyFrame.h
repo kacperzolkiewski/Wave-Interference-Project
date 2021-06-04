@@ -77,7 +77,7 @@ public:
 	double time = 0.;
 	wxTimer timer;
 	bool flag = true;
-	int duration = 10;
+	int duration = 5;
 	unsigned how_much = 0;
 };
 

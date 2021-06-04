@@ -33,12 +33,12 @@ MyDialog::MyDialog(wxWindow* parent, wxWindowID id, const wxString& title, const
 	m_textCtrl2 = new wxTextCtrl(sbSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
 	sbSizer->Add(m_textCtrl2, 0, wxALL, 5);
 
-	m_staticText3 = new wxStaticText(sbSizer->GetStaticBox(), wxID_ANY, wxT("Set Z"), wxDefaultPosition, wxDefaultSize, 0);
-	m_staticText3->Wrap(-1);
-	sbSizer->Add(m_staticText3, 0, wxALL, 5);
+//	m_staticText3 = new wxStaticText(sbSizer->GetStaticBox(), wxID_ANY, wxT("Set Z"), wxDefaultPosition, wxDefaultSize, 0);
+	//m_staticText3->Wrap(-1);
+	//sbSizer->Add(m_staticText3, 0, wxALL, 5);
 
-	m_textCtrl3 = new wxTextCtrl(sbSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
-	sbSizer->Add(m_textCtrl3, 0, wxALL, 5);
+	//m_textCtrl3 = new wxTextCtrl(sbSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
+	//sbSizer->Add(m_textCtrl3, 0, wxALL, 5);
 
 	m_staticText4 = new wxStaticText(sbSizer->GetStaticBox(), wxID_ANY, wxT("Amplitude [m]"), wxDefaultPosition, wxDefaultSize, 0);
 	m_staticText4->Wrap(-1);
@@ -76,33 +76,36 @@ MyDialog::MyDialog(wxWindow* parent, wxWindowID id, const wxString& title, const
 	//Controlling Parameters
 	//////////////////////////////
 
-	x = wxAtof(m_textCtrl1->GetValue());
-	if (x < 0.0 or x > 1000.0){
-		flag = false;
+	x = 100;
+	if (x < 0.0 || x > 1000.0){
+		add = false;
 		wxLogMessage("Given wrong parameter!!!");
 	}
-	y = wxAtof(m_textCtrl2->GetValue());
+	y = 100;
 	if (y < 0.0 or y > 1000.0) {
-		flag = false;
+		add = false;
 		wxLogMessage("Given wrong parameter!!!");
 	}
-	z = wxAtof(m_textCtrl3->GetValue());
-	if (z < 0.0 or z > 1000.0) {
-		flag = false;
-		wxLogMessage("Given wrong parameter!!!");
-	}
-	amplitude = wxAtof(m_textCtrl4->GetValue());
+	//z = wxAtof(m_textCtrl3->GetValue());
+	//if (z < 0.0 or z > 1000.0) {
+		//flag = false;
+		//wxLogMessage("Given wrong parameter!!!");
+	//}
+	amplitude = 4;
 	if (amplitude < 0 || amplitude > 9.999) {
-		flag = false;
+		add = false;
 		wxLogMessage("Given wrong parameter!!!");
 	}
-	frequency = wxAtof(m_textCtrl5->GetValue());
+	frequency = 2;
 	if (frequency < 0 || frequency > 9.99999) {
-		flag = false;
+		add = false;
 		wxLogMessage("Given wrong parameter!!!");
 	}
+
+
 }
 
 MyDialog::~MyDialog()
 {
+	Destroy();
 }

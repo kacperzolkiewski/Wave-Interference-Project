@@ -151,6 +151,29 @@ void GUIMyFrame::copyClick(wxCommandEvent& event)
 void GUIMyFrame::startClick(wxCommandEvent& event)
 {
 	// TODO: Implement startClick
+	if (_amplitude.size() <= 0) {
+		wxLogMessage("You have to add source, if you want to start");
+		return;
+	}
+	m_start->SetLabel("PROCESSING");
+	flag = true;
+
+	int start_time = wxGetLocalTime();
+	int time_now = start_time;
+	seconds = 0;
+	timer.Start(100);
+	int time_diff = time_now - start_time;
+
+	while (time_diff <= duration) {
+		
+		
+		Draw();
+		time_now = wxGetLocalTime();
+		time_diff = time_now - start_time;
+	}
+
+	timer.Stop();
+	m_start->SetLabel("START");
 	
 }
 
@@ -181,18 +204,22 @@ void GUIMyFrame::Paint() {
 		for (unsigned j = 0; j < _points_in_y; ++j)
 		{
 			transform_vector[i].push_back(myVector(_points[i][j].x, _points[i][j].y));
-
+			
 		}
 	}
 
 #pragma omp parallel for
 	for (unsigned i = 0; i < _points.size(); ++i) {
+		
 		jmax = _points[i].size();
 		for (unsigned j = 0; j < _points[i].size(); ++j) {
+			
 			transform_vector[i][j][2] = 0;
 			for (unsigned l = 0; l < how_much; ++l) {
-				if (_amplitude.size() > 0)
+				if (_amplitude.size() > 0) {
+				
 					transform_vector[i][j][2] += _amplitude[l] * 10 * sin(0.1 * seconds - _frequency[l] * 0.01 * _distance[i * jmax + j][l]);
+				}
 			}
 		}
 	}
@@ -202,8 +229,11 @@ void GUIMyFrame::Paint() {
 		for (unsigned j = 0; j < _points_in_y; ++j)
 		{
 			transform_vector[i][j] = (_transform * transform_vector[i][j]);
-			for (int k = 0; k < 3; ++k)
+			for (int k = 0; k < 3; ++k) {
 				transform_vector[i][j][k] /= transform_vector[i][j][3];
+				
+			}
+			
 			_draw_points[i][j].x = transform_vector[i][j][0];
 			_draw_points[i][j].y = transform_vector[i][j][1];
 		}
@@ -214,14 +244,15 @@ void GUIMyFrame::Paint() {
 	MyDC.SetBackground(*wxWHITE_BRUSH);
 	MyDC.Clear();
 
-	MyDC.SetPen(wxPen(*wxBLACK));
+	MyDC.SetPen(wxPen(*wxBLUE));
 	wxPoint* tab;
 	std::vector<wxPoint> tmp;
 #pragma omp parallel for
 	for (unsigned i = 0; i < _points_in_x; ++i)
 	{
 		for (unsigned j = 0; j < _points_in_y - 1; ++j)
-		{
+		{	
+			
 			tmp.push_back(_draw_points[i][j]);
 			if (i + 1 < _points_in_x)
 				tmp.push_back(_draw_points[i + 1][j]);
@@ -251,4 +282,7 @@ void GUIMyFrame::Paint() {
 void GUIMyFrame::Draw() {
 	//Nie wiem czy potrzebne
 
+	Paint();
+	time += timer.GetInterval() / 100.;
+	seconds = time;
 }
