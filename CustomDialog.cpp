@@ -76,6 +76,7 @@ MyDialog::MyDialog(wxWindow* parent, wxWindowID id, const wxString& title, const
 	//Controlling Parameters
 	//////////////////////////////
 
+
 	x = 100;
 	if (x < 0.0 || x > 1000.0){
 		add = false;

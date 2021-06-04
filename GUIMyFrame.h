@@ -53,6 +53,7 @@ public:
 
 	void Paint();
 	void Draw();
+	
 
 	double src_distance(double x1, double y1, double x2, double y2);
 	/** Constructor */
@@ -60,25 +61,50 @@ public:
 	//// end generated class members
 
 	std::string str = "10";
+
+
 	myMatrix _transform;
+
+
 	std::vector<std::vector<wxPoint>> _points;
 	std::vector<std::vector<wxPoint>> _draw_points;
 	std::vector<std::vector<double>> _distance;
 	std::vector<double> _amplitude;
 	std::vector<double> _frequency;
+
+
 	wxImage image;
 	wxBitmap buffer;
 	wxClientDC MyDC_client;
 	int counter = 0;
 	unsigned seconds = 0;
+
+
 	double _point_scale_x;
 	double _point_scale_y;
 	unsigned _points_in_x, _points_in_y;
+
+
 	double time = 0.;
 	wxTimer timer;
 	bool flag = true;
-	int duration = 5;
+	int duration = 15;
 	unsigned how_much = 0;
+
+
+	/// <summary>
+	/// seria danych dla drugiego punktu
+	/// </summary>
+
+	bool flag2 = true;
+
+
+	std::vector<std::vector<wxPoint>> _points_2;
+	std::vector<std::vector<wxPoint>> _draw_points_2;
+	std::vector<std::vector<double>> _distance_2;
+	std::vector<double> _amplitude_2;
+	std::vector<double> _frequency_2;
+	unsigned how_much_2 = 0;
 };
 
 #endif // __GUIMyFrame__
