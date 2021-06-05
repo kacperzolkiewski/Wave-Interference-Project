@@ -88,7 +88,7 @@ public:
 	double time = 0.;
 	wxTimer timer;
 	bool flag = true;
-	int duration = 15;
+	int duration = 2;
 	unsigned how_much = 0;
 
 

@@ -68,6 +68,7 @@ void GUIMyFrame::on_addSource1Click(wxCommandEvent& event)
 
 	MyDialog* dialog = new MyDialog();
 	dialog->Show(true);
+
 	int jmax = 0;
 
 	if (dialog->running()) {
@@ -82,6 +83,12 @@ void GUIMyFrame::on_addSource1Click(wxCommandEvent& event)
 		_frequency.push_back(dialog->get_frequency());
 		flag = false;
 	}
+
+	wxLogMessage("Wybrane przez Ciebie parametry (x, y, amplitude, frequency) to: "
+		+ wxString::Format(wxT("%f.2"), dialog->get_x()) + " "
+		+ wxString::Format(wxT("%f.2"), dialog->get_y()) + " "
+		+ wxString::Format(wxT("%f.2"), dialog->get_amplitude()) + " "
+		+ wxString::Format(wxT("%f.2"), dialog->get_frequency()));
 }
 
 void GUIMyFrame::on_addSource2Click(wxCommandEvent& event)
@@ -90,7 +97,7 @@ void GUIMyFrame::on_addSource2Click(wxCommandEvent& event)
 	MyDialog* dialog = new MyDialog();
 	dialog->Show(true);
 	int jmax = 0;
-
+	
 	if (dialog->running()) {
 		how_much_2++;
 		for (unsigned i = 0; i < _points.size(); ++i) {
@@ -103,6 +110,13 @@ void GUIMyFrame::on_addSource2Click(wxCommandEvent& event)
 		_frequency_2.push_back(dialog->get_frequency()+1);
 		flag2 = false;
 	}
+
+	wxLogMessage("Wybrane przez Ciebie parametry (x, y, amplitude, frequency) to: "
+		+ wxString::Format(wxT("%f.2"), dialog->get_x()) + " "
+		+ wxString::Format(wxT("%f.2"), dialog->get_y()) + " "
+		+ wxString::Format(wxT("%f.2"), dialog->get_amplitude()) + " "
+		+ wxString::Format(wxT("%f.2"), dialog->get_frequency()));
+
 }
 
 void GUIMyFrame::onScrollX(wxScrollEvent& event)

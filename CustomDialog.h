@@ -36,31 +36,46 @@ class MyDialog : public wxDialog
 private:
 	bool add = true;
 	double x, y, amplitude, frequency;
+
+	enum
+	{
+		ID_WXEDIT_X = 1001,
+		ID_WXEDIT_Y = 1002,
+		ID_WXEDIT_AMP = 1003,
+		ID_WXEDIT_FREQ = 1004
+	};
+
 protected:
-	wxStaticText* m_staticText1;
-	wxTextCtrl* m_textCtrl1;
-	wxStaticText* m_staticText2;
-	wxTextCtrl* m_textCtrl2;
+	wxStaticText* m_staticText_x;
+	wxTextCtrl* m_textCtrl_x;
+	wxStaticText* m_staticText_y;
+	wxTextCtrl* m_textCtrl_y;
 	//wxStaticText* m_staticText3;
 	//wxTextCtrl* m_textCtrl3;
-	wxStaticText* m_staticText4;
-	wxTextCtrl* m_textCtrl4;
-	wxStaticText* m_staticText5;
-	wxTextCtrl* m_textCtrl5;
+	wxStaticText* m_staticText_amp;
+	wxTextCtrl* m_textCtrl_amp;
+	wxStaticText* m_staticText_freq;
+	wxTextCtrl* m_textCtrl_freq;
 	wxStdDialogButtonSizer* m_sdbSizer1;
-	wxButton* m_sdbSizer1OK;
-	wxButton* m_sdbSizer1Cancel;
+	wxButton* m_sdbSizer_OK;
+	wxButton* m_sdbSizer_Cancel;
 
 public:
 
 	MyDialog(wxWindow* parent = NULL, wxWindowID id = wxID_ANY, const wxString& title = "Setting Parameters", const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(365, 418), long style = wxDEFAULT_DIALOG_STYLE | wxSIMPLE_BORDER);
 	~MyDialog();
+	void updateX(wxCommandEvent& e);
+	void updateY(wxCommandEvent& e);
+	void updateAMP(wxCommandEvent& e);
+	void updateFREQ(wxCommandEvent& e);
 	bool running() const { return add; }
 	const auto get_x() const { return x; }
 	const auto get_y() const { return y; }
 	//const auto get_z() const { return z; }
 	const auto get_amplitude() const { return amplitude; }
 	const auto get_frequency() const { return frequency; }
+
+	
 };
 
 #endif //__NONAME_H__
