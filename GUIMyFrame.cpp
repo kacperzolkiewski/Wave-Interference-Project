@@ -4,32 +4,32 @@
 
 GUIMyFrame::GUIMyFrame(wxWindow* parent)
 	:
-	MyFrame2(parent), MyDC_client(m_panel2)
+	MyFrame2(parent), myClient(m_panel2)
 {
 	wxInitAllImageHandlers();
 
 	wxSize XY = m_panel2->GetSize();
 	
 	//wielkosc kratek w siatce
-	int x_max = (XY.x -150);
-	int y_max = (XY.y - 150);
+	int x_max = (XY.x - 90);
+	int y_max = (XY.y - 90);
 	
-	_points_in_x = XY.x / 8;
-	_points_in_y = XY.y / 8;
+	pointsX = XY.x / 6;
+	pointsY = XY.y / 6;
 	
-	_point_scale_x = x_max / static_cast<double>(_points_in_x);
-	_point_scale_y = y_max / static_cast<double>(_points_in_y);
+	scaleX = x_max / static_cast<double>(pointsX);
+	scaleY = y_max / static_cast<double>(pointsY);
 	
-	for (unsigned i = 0; i < _points_in_x; ++i) {
+	for (unsigned i = 0; i < pointsX; ++i) {
 
-		_points.push_back(std::vector<wxPoint>());
-		_draw_points.push_back(std::vector<wxPoint>());
+		points1.push_back(std::vector<wxPoint>());
+		drawPoints1.push_back(std::vector<wxPoint>());
 
-		for (unsigned j = 0; j < _points_in_y; ++j) {
-			_points[i].push_back(wxPoint(i * _point_scale_x, j * _point_scale_y));
-			_draw_points[i].push_back(wxPoint(0, 0));
-			_distance.push_back(std::vector<double>());
-			_distance_2.push_back(std::vector<double>());
+		for (unsigned j = 0; j < pointsY; ++j) {
+			points1[i].push_back(wxPoint(i * scaleX, j * scaleY));
+			drawPoints1[i].push_back(wxPoint(0, 0));
+			points1Distance.push_back(std::vector<double>());
+			points2Distance.push_back(std::vector<double>());
 		}
 
 	}
@@ -40,140 +40,136 @@ GUIMyFrame::GUIMyFrame(wxWindow* parent)
 	int y = m_sliderY->GetValue() * 3.5;
 	int z = m_sliderZ->GetValue() * 4.5;
 
-	_transform = set_perspective() * set_scale(1.0) * set_rotation(x, y, z) * set_translation(-static_cast<double>(_points_in_x * (_point_scale_x) / 2.0), -static_cast<double>(_points_in_y * (_point_scale_y) / 2.0));
-
+	transformMatrix = set_perspective() * set_scale(1.0) * set_rotation(x, y, z) * 
+		set_translation(-static_cast<double>(pointsX * (scaleX) / 2.0), 
+		-static_cast<double>(pointsY * (scaleY) / 2.0));
 }
 
 void GUIMyFrame::onUpdateUI(wxUpdateUIEvent& event)
 {
-	// TODO: Implement onUpdateUI
-	if (flag2 && flag) Paint();
+	if (flag2 && flag1) Paint();
 }
 
 void GUIMyFrame::saveToFileClick(wxCommandEvent& event)
 {
-	// TODO: Implement saveToFileClick
 	wxFileDialog fileDialog(this, "", "", "", "PNG files (*.png)|*.png|JPG files (*.jpg)|*.jpg", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
-	image = buffer.ConvertToImage();
+	interferenceImage = myBuffer.ConvertToImage();
 
 	if (fileDialog.ShowModal() == wxID_CANCEL) return;
 
-	image.AddHandler(new wxJPEGHandler);
-	image.AddHandler(new wxPNGHandler);
-	image.SaveFile(fileDialog.GetPath());
+	interferenceImage.AddHandler(new wxJPEGHandler);
+	interferenceImage.AddHandler(new wxPNGHandler);
+	interferenceImage.SaveFile(fileDialog.GetPath());
 }
 
 void GUIMyFrame::on_addSource1Click(wxCommandEvent& event)
 {
-
 	MyDialog* dialog = new MyDialog();
 	dialog->Show(true);
-
-	int jmax = 0;
+	int max = 0;
 
 	if (dialog->running()) {
-		how_much++;
-		for (unsigned i = 0; i < _points.size(); ++i) {
-			jmax = _points[i].size();
-			for (unsigned j = 0; j < _points[i].size(); ++j) {
-				_distance[i * jmax + j].push_back(src_distance(_points[i][j].x, _points[i][j].y, dialog->get_x(), dialog->get_y()));
+		counter1++;
+		for (unsigned i = 0; i < points1.size(); ++i) {
+			max = points1[i].size();
+			for (unsigned j = 0; j < points1[i].size(); ++j) {
+				points1Distance[i * max + j].push_back(measureDistance(points1[i][j].x, 
+					points1[i][j].y, dialog->getX(), dialog->getY()));
 			}
 		}
-		_amplitude.push_back(dialog->get_amplitude());
-		_frequency.push_back(dialog->get_frequency());
-		flag = false;
+		points1Amplitude.push_back(dialog->getAmplitude());
+		points1Frequency.push_back(dialog->getFrequency());
+		flag1 = false;
 	}
 
 	wxLogMessage("Wybrane przez Ciebie parametry (x, y, amplitude, frequency) to: "
-		+ wxString::Format(wxT("%f.2"), dialog->get_x()) + " "
-		+ wxString::Format(wxT("%f.2"), dialog->get_y()) + " "
-		+ wxString::Format(wxT("%f.2"), dialog->get_amplitude()) + " "
-		+ wxString::Format(wxT("%f.2"), dialog->get_frequency()));
+		+ wxString::Format(wxT("%f.2"), dialog->getX()) + " "
+		+ wxString::Format(wxT("%f.2"), dialog->getY()) + " "
+		+ wxString::Format(wxT("%f.2"), dialog->getAmplitude()) + " "
+		+ wxString::Format(wxT("%f.2"), dialog->getFrequency()));
 }
 
 void GUIMyFrame::on_addSource2Click(wxCommandEvent& event)
 {
-	// TODO: Implement on_addSource2Click
 	MyDialog* dialog = new MyDialog();
 	dialog->Show(true);
-	int jmax = 0;
+	int max = 0;
 	
 	if (dialog->running()) {
-		how_much_2++;
-		for (unsigned i = 0; i < _points.size(); ++i) {
-			jmax = _points[i].size();
-			for (unsigned j = 0; j < _points[i].size(); ++j) {
-				_distance_2[i * jmax + j].push_back(src_distance(_points[i][j].x, _points[i][j].y, dialog->get_x()+250, dialog->get_y()+100));
+		counter2++;
+		for (unsigned i = 0; i < points1.size(); ++i) {
+			max = points1[i].size();
+			for (unsigned j = 0; j < points1[i].size(); ++j) {
+				points2Distance[i * max + j].push_back(measureDistance(points1[i][j].x, 
+					points1[i][j].y, dialog->getX() + 250, dialog->getY() + 100));
 			}
 		}
-		_amplitude_2.push_back(dialog->get_amplitude()-1);
-		_frequency_2.push_back(dialog->get_frequency()+1);
+		points2Amplitude.push_back(dialog->getAmplitude()-1);
+		points2Frequency.push_back(dialog->getFrequency()+1);
 		flag2 = false;
 	}
 
 	wxLogMessage("Wybrane przez Ciebie parametry (x, y, amplitude, frequency) to: "
-		+ wxString::Format(wxT("%f.2"), dialog->get_x()) + " "
-		+ wxString::Format(wxT("%f.2"), dialog->get_y()) + " "
-		+ wxString::Format(wxT("%f.2"), dialog->get_amplitude()) + " "
-		+ wxString::Format(wxT("%f.2"), dialog->get_frequency()));
+		+ wxString::Format(wxT("%f.2"), dialog->getX()) + " "
+		+ wxString::Format(wxT("%f.2"), dialog->getY()) + " "
+		+ wxString::Format(wxT("%f.2"), dialog->getAmplitude()) + " "
+		+ wxString::Format(wxT("%f.2"), dialog->getFrequency()));
 
 }
 
 void GUIMyFrame::onScrollX(wxScrollEvent& event)
 {
-	// TODO: Implement onScrollX
-
-
 	int x = m_sliderX->GetValue() * 6;
 	int y = m_sliderY->GetValue() * 3.5;
 	int z = m_sliderZ->GetValue() * 4.5;
 	
-	_transform = set_perspective() * set_scale(1.0) * set_rotation(x, y, z) * set_translation(-static_cast<double>(_points_in_x * (_point_scale_x) / 2.0), -static_cast<double>(_points_in_y * (_point_scale_y) / 2.0));
+	transformMatrix = set_perspective() * set_scale(1.0) * set_rotation(x, y, z) * 
+		set_translation(-static_cast<double>(pointsX * (scaleX) / 2.0), 
+		-static_cast<double>(pointsY * (scaleY) / 2.0));
 	Paint();
 }
 
 void GUIMyFrame::onScrollY(wxScrollEvent& event)
 {
-	// TODO: Implement onScrollY
-
-
 	int x = m_sliderX->GetValue() * 6;
 	int y = m_sliderY->GetValue() * 3.5;
 	int z = m_sliderZ->GetValue() * 4.5;
 
-	_transform = set_perspective() * set_scale(1.0) * set_rotation(x, y, z) * set_translation(-static_cast<double>(_points_in_x * (_point_scale_x) / 2.0), -static_cast<double>(_points_in_y * (_point_scale_y) / 2.0));
+	transformMatrix = set_perspective() * set_scale(1.0) * set_rotation(x, y, z) * 
+		set_translation(-static_cast<double>(pointsX * (scaleX) / 2.0),
+		-static_cast<double>(pointsY * (scaleY) / 2.0));
 	Paint();
 }
 
 void GUIMyFrame::onScrollZ(wxScrollEvent& event)
 {
-	// TODO: Implement onScrollZ
-
-	
 	int x = m_sliderX->GetValue() * 6;
 	int y = m_sliderY->GetValue() * 3.5;
 	int z = m_sliderZ->GetValue() * 4.5;
 
-	_transform = set_perspective() * set_scale(1.0) * set_rotation(x, y, z) * set_translation(-static_cast<double>(_points_in_x * (_point_scale_x) / 2.0), -static_cast<double>(_points_in_y * (_point_scale_y) / 2.0));
+	transformMatrix = set_perspective() * set_scale(1.0) * set_rotation(x, y, z) * 
+		set_translation(-static_cast<double>(pointsX * (scaleX) / 2.0), 
+		-static_cast<double>(pointsY * (scaleY) / 2.0));
 	Paint();
 }
 
 void GUIMyFrame::nextClick(wxCommandEvent& event)
 {
-	// TODO: Implement nextClick
+	seconds = seconds + 1;
+	Paint();
 }
 
 void GUIMyFrame::prevClick(wxCommandEvent& event)
 {
-	// TODO: Implement prevClick
+	seconds = seconds - 1;
+	Paint();
 }
 
 void GUIMyFrame::copyClick(wxCommandEvent& event)
 {
-	// TODO: Implement copyClick
 	if (wxTheClipboard->Open())
 	{
-		wxTheClipboard->SetData(new wxBitmapDataObject(buffer));
+		wxTheClipboard->SetData(new wxBitmapDataObject(myBuffer));
 		wxTheClipboard->Flush();
 		wxTheClipboard->Close();
 	}
@@ -181,13 +177,12 @@ void GUIMyFrame::copyClick(wxCommandEvent& event)
 
 void GUIMyFrame::startClick(wxCommandEvent& event)
 {
-	// TODO: Implement startClick
-	if (_amplitude.size() <= 0 && _amplitude_2.size() <=0 ) {
+	if (points1Amplitude.size() <= 0 && points2Amplitude.size() <=0) {
 		wxLogMessage("You have to add source, if you want to start");
 		return;
 	}
 	m_start->SetLabel("PROCESSING");
-	flag = true;
+	flag1 = true;
 	flag2 = true;
 
 	int start_time = wxGetLocalTime();
@@ -197,8 +192,6 @@ void GUIMyFrame::startClick(wxCommandEvent& event)
 	int time_diff = time_now - start_time;
 
 	while (time_diff <= duration) {
-		
-		
 		Draw();
 		time_now = wxGetLocalTime();
 		time_diff = time_now - start_time;
@@ -206,81 +199,79 @@ void GUIMyFrame::startClick(wxCommandEvent& event)
 
 	timer.Stop();
 	m_start->SetLabel("START");
-	
 }
 
 void GUIMyFrame::resetClick(wxCommandEvent& event)
 {
-	// TODO: Implement resetClick
-	
 	m_sliderX->SetValue(m_sliderX->GetMax() / 2);
 	m_sliderY->SetValue(m_sliderY->GetMax() / 2);
 	m_sliderZ->SetValue(m_sliderZ->GetMax() / 2);
-	_transform = set_perspective() * set_scale(1.0) * set_rotation(m_sliderX->GetValue() * 6, m_sliderY->GetValue() * 3.5, m_sliderZ->GetValue() * 4.5) * set_translation(-static_cast<double>(_points_in_x * (_point_scale_x) / 2.0), -static_cast<double>(_points_in_y * (_point_scale_y) / 2.0));
-
+	transformMatrix = set_perspective() * set_scale(1.0) * set_rotation(m_sliderX->GetValue() * 6, 
+		m_sliderY->GetValue() * 3.5, m_sliderZ->GetValue() * 4.5) * set_translation(-static_cast<double>(pointsX * (scaleX) / 2.0),
+		-static_cast<double>(pointsY * (scaleY) / 2.0));
 }
 
 
-double GUIMyFrame::src_distance(double x1, double y1, double x2, double y2) {
+double GUIMyFrame::measureDistance(double x1, double y1, double x2, double y2) {
 	return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 }
 
 void GUIMyFrame::Paint() {
 
 	int k = 0;
-	int jmax = 0;
+	int max = 0;
 	std::vector<std::vector<myVector>> transform_vector;
 #pragma omp parallel for
-	for (unsigned i = 0; i < _points_in_x; ++i) {
+	for (unsigned i = 0; i < pointsX; ++i) {
 		transform_vector.push_back(std::vector<myVector>());
-		for (unsigned j = 0; j < _points_in_y; ++j)
+		for (unsigned j = 0; j < pointsY; ++j)
 		{
-			transform_vector[i].push_back(myVector(_points[i][j].x, _points[i][j].y));
+			transform_vector[i].push_back(myVector(points1[i][j].x, points1[i][j].y));
 			
 		}
 	}
 
 #pragma omp parallel for
-	for (unsigned i = 0; i < _points.size(); ++i) {
+	for (unsigned i = 0; i < points1.size(); ++i) {
 		
-		jmax = _points[i].size();
-		for (unsigned j = 0; j < _points[i].size(); ++j) {
+		max = points1[i].size();
+		for (unsigned j = 0; j < points1[i].size(); ++j) {
 			
 			transform_vector[i][j][2] = 0;
-			for (unsigned l = 0; l < how_much; ++l) {
-				if (_amplitude.size() > 0) {
+			for (unsigned l = 0; l < counter1; ++l) {
+				if (points1Amplitude.size() > 0) {
 				
-					transform_vector[i][j][2] += _amplitude[l] * 10 * sin(0.1 * seconds - _frequency[l] * 0.01 * _distance[i * jmax + j][l]);
+					transform_vector[i][j][2] += points1Amplitude[l] * 10 * sin(0.1 * seconds - points1Frequency[l] * 0.01 * points1Distance[i * max + j][l]);
 					//transform_vector[i][j][2] += _amplitude_2[l] * 10 * sin(0.1 * seconds - _frequency_2[l] * 0.01 * _distance_2[i * jmax + j][l]);
 				}
 			}
-			for (unsigned l = 0; l < how_much_2; ++l) {
-				if (_amplitude_2.size() > 0) {
+			for (unsigned l = 0; l < counter2; ++l) {
+				if (points2Amplitude.size() > 0) {
 					
 					//transform_vector[i][j][2] += _amplitude[l] * 10 * sin(0.1 * seconds - _frequency[l] * 0.01 * _distance[i * jmax + j][l]);
-					transform_vector[i][j][2] += _amplitude_2[l] * 10 * sin(0.1 * seconds - _frequency_2[l] * 0.01 * _distance_2[i * jmax + j][l]);
+					transform_vector[i][j][2] += points2Amplitude[l] * 10 * sin(0.1 * seconds - points2Frequency[l] * 0.01 * points2Distance[i * max + j][l]);
 				}
 			}
 		}
 	}
 
 #pragma omp parallel for
-	for (unsigned i = 0; i < _points_in_x; ++i) {
-		for (unsigned j = 0; j < _points_in_y; ++j)
+	for (unsigned i = 0; i < pointsX; ++i) {
+		for (unsigned j = 0; j < pointsY; ++j)
 		{
-			transform_vector[i][j] = (_transform * transform_vector[i][j]);
+			transform_vector[i][j] = (transformMatrix * transform_vector[i][j]);
 			for (int k = 0; k < 3; ++k) {
 				transform_vector[i][j][k] /= transform_vector[i][j][3];
 				
 			}
 			
-			_draw_points[i][j].x = transform_vector[i][j][0];
-			_draw_points[i][j].y = transform_vector[i][j][1];
+			drawPoints1[i][j].x = transform_vector[i][j][0];
+			drawPoints1[i][j].y = transform_vector[i][j][1];
 		}
 	}
 
-	buffer = wxBitmap(m_panel2->GetSize().x, m_panel2->GetSize().y);
-	wxBufferedDC MyDC(&MyDC_client, buffer);
+	myBuffer = wxBitmap(m_panel2->GetSize().x, m_panel2->GetSize().y);
+	wxBufferedDC MyDC(&myClient, myBuffer);
 	MyDC.SetBackground(*wxWHITE_BRUSH);
 	MyDC.Clear();
 
@@ -288,33 +279,33 @@ void GUIMyFrame::Paint() {
 	wxPoint* tab;
 	std::vector<wxPoint> tmp;
 #pragma omp parallel for
-	for (unsigned i = 0; i < _points_in_x; ++i)
+	for (unsigned i = 0; i < pointsX; ++i)
 	{
-		for (unsigned j = 0; j < _points_in_y - 1; ++j)
+		for (unsigned j = 0; j < pointsY - 1; ++j)
 		{	
 			
-			tmp.push_back(_draw_points[i][j]);
-			if (i + 1 < _points_in_x) {
-				tmp.push_back(_draw_points[i + 1][j]);
+			tmp.push_back(drawPoints1[i][j]);
+			if (i + 1 < pointsX) {
+				tmp.push_back(drawPoints1[i + 1][j]);
 			}
 			if (i - 1 > -1) {
-				tmp.push_back(_draw_points[i - 1][j]);
+				tmp.push_back(drawPoints1[i - 1][j]);
 			}
 			if (i - 1 > -1 && j - 1 > -1) {
-				tmp.push_back(_draw_points[i - 1][j - 1]);
+				tmp.push_back(drawPoints1[i - 1][j - 1]);
 			}
-			tmp.push_back(_draw_points[i][j]);
-			if (j + 1 < _points_in_y) {
-				tmp.push_back(_draw_points[i][j + 1]);
+			tmp.push_back(drawPoints1[i][j]);
+			if (j + 1 < pointsY) {
+				tmp.push_back(drawPoints1[i][j + 1]);
 			}
-			if (i + 1 < _points_in_x && j + 1 < _points_in_y) {
-				tmp.push_back(_draw_points[i + 1][j + 1]);
+			if (i + 1 < pointsX && j + 1 < pointsY) {
+				tmp.push_back(drawPoints1[i + 1][j + 1]);
 			}
 
 		}
 	}
 
-	tmp.push_back(_draw_points[_points_in_x - 1][_points_in_y - 1]);
+	tmp.push_back(drawPoints1[pointsX - 1][pointsY - 1]);
 	tab = tmp.data();
 	int size = tmp.size();
 	wxSize XY = m_panel2->GetSize();
@@ -323,11 +314,7 @@ void GUIMyFrame::Paint() {
 	MyDC.DrawLines(size, tab, 320, 220);
 }
 
-
-
 void GUIMyFrame::Draw() {
-	//Nie wiem czy potrzebne
-
 	Paint();
 	time += timer.GetInterval() / 100.;
 	seconds = time;

@@ -48,63 +48,39 @@ protected:
 	void startClick(wxCommandEvent& event);
 	void resetClick(wxCommandEvent& event);
 
-
 public:
+	GUIMyFrame(wxWindow* parent);
 
 	void Paint();
 	void Draw();
-	
+	double measureDistance(double x1, double y1, double x2, double y2);
 
-	double src_distance(double x1, double y1, double x2, double y2);
-	/** Constructor */
-	GUIMyFrame(wxWindow* parent);
-	//// end generated class members
-
-	std::string str = "10";
-
-
-	myMatrix _transform;
-
-
-	std::vector<std::vector<wxPoint>> _points;
-	std::vector<std::vector<wxPoint>> _draw_points;
-	std::vector<std::vector<double>> _distance;
-	std::vector<double> _amplitude;
-	std::vector<double> _frequency;
-
-
-	wxImage image;
-	wxBitmap buffer;
-	wxClientDC MyDC_client;
-	int counter = 0;
-	unsigned seconds = 0;
-
-
-	double _point_scale_x;
-	double _point_scale_y;
-	unsigned _points_in_x, _points_in_y;
-
-
-	double time = 0.;
+	wxImage interferenceImage;
+	wxBitmap myBuffer;
+	wxClientDC myClient;
 	wxTimer timer;
-	bool flag = true;
-	int duration = 2;
-	unsigned how_much = 0;
+	myMatrix transformMatrix;
+	unsigned seconds = 0;
+	int duration = 10;
+	double time = 0.0;
+	double scaleX, scaleY;
+	unsigned pointsX, pointsY;
 
-
-	/// <summary>
-	/// seria danych dla drugiego punktu
-	/// </summary>
-
+	std::vector<std::vector<wxPoint>> points1;
+	std::vector<std::vector<wxPoint>> drawPoints1;
+	std::vector<std::vector<double>> points1Distance;
+	std::vector<double> points1Amplitude;
+	std::vector<double> points1Frequency;
+	unsigned counter1 = 0;
+	bool flag1 = true;
+	
+	std::vector<std::vector<wxPoint>> points2;
+	std::vector<std::vector<wxPoint>> drawPoints2;
+	std::vector<std::vector<double>> points2Distance;
+	std::vector<double> points2Amplitude;
+	std::vector<double> points2Frequency;
+	unsigned counter2 = 0;
 	bool flag2 = true;
-
-
-	std::vector<std::vector<wxPoint>> _points_2;
-	std::vector<std::vector<wxPoint>> _draw_points_2;
-	std::vector<std::vector<double>> _distance_2;
-	std::vector<double> _amplitude_2;
-	std::vector<double> _frequency_2;
-	unsigned how_much_2 = 0;
 };
 
 #endif // __GUIMyFrame__

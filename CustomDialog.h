@@ -69,11 +69,11 @@ public:
 	void updateAMP(wxCommandEvent& e);
 	void updateFREQ(wxCommandEvent& e);
 	bool running() const { return add; }
-	const auto get_x() const { return x; }
-	const auto get_y() const { return y; }
+	const auto getX() const { return x; }
+	const auto getY() const { return y; }
 	//const auto get_z() const { return z; }
-	const auto get_amplitude() const { return amplitude; }
-	const auto get_frequency() const { return frequency; }
+	const auto getAmplitude() const { return amplitude; }
+	const auto getFrequency() const { return frequency; }
 
 	
 };
