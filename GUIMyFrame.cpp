@@ -29,6 +29,7 @@ GUIMyFrame::GUIMyFrame(wxWindow* parent)
 			_points[i].push_back(wxPoint(i * _point_scale_x, j * _point_scale_y));
 			_draw_points[i].push_back(wxPoint(0, 0));
 			_distance.push_back(std::vector<double>());
+			_distance_2.push_back(std::vector<double>());
 		}
 
 	}
@@ -46,7 +47,7 @@ GUIMyFrame::GUIMyFrame(wxWindow* parent)
 void GUIMyFrame::onUpdateUI(wxUpdateUIEvent& event)
 {
 	// TODO: Implement onUpdateUI
-	if (flag) Paint();
+	if (flag2 && flag) Paint();
 }
 
 void GUIMyFrame::saveToFileClick(wxCommandEvent& event)
@@ -67,6 +68,7 @@ void GUIMyFrame::on_addSource1Click(wxCommandEvent& event)
 
 	MyDialog* dialog = new MyDialog();
 	dialog->Show(true);
+
 	int jmax = 0;
 
 	if (dialog->running()) {
@@ -81,11 +83,40 @@ void GUIMyFrame::on_addSource1Click(wxCommandEvent& event)
 		_frequency.push_back(dialog->get_frequency());
 		flag = false;
 	}
+
+	wxLogMessage("Wybrane przez Ciebie parametry (x, y, amplitude, frequency) to: "
+		+ wxString::Format(wxT("%f.2"), dialog->get_x()) + " "
+		+ wxString::Format(wxT("%f.2"), dialog->get_y()) + " "
+		+ wxString::Format(wxT("%f.2"), dialog->get_amplitude()) + " "
+		+ wxString::Format(wxT("%f.2"), dialog->get_frequency()));
 }
 
 void GUIMyFrame::on_addSource2Click(wxCommandEvent& event)
 {
 	// TODO: Implement on_addSource2Click
+	MyDialog* dialog = new MyDialog();
+	dialog->Show(true);
+	int jmax = 0;
+	
+	if (dialog->running()) {
+		how_much_2++;
+		for (unsigned i = 0; i < _points.size(); ++i) {
+			jmax = _points[i].size();
+			for (unsigned j = 0; j < _points[i].size(); ++j) {
+				_distance_2[i * jmax + j].push_back(src_distance(_points[i][j].x, _points[i][j].y, dialog->get_x()+250, dialog->get_y()+100));
+			}
+		}
+		_amplitude_2.push_back(dialog->get_amplitude()-1);
+		_frequency_2.push_back(dialog->get_frequency()+1);
+		flag2 = false;
+	}
+
+	wxLogMessage("Wybrane przez Ciebie parametry (x, y, amplitude, frequency) to: "
+		+ wxString::Format(wxT("%f.2"), dialog->get_x()) + " "
+		+ wxString::Format(wxT("%f.2"), dialog->get_y()) + " "
+		+ wxString::Format(wxT("%f.2"), dialog->get_amplitude()) + " "
+		+ wxString::Format(wxT("%f.2"), dialog->get_frequency()));
+
 }
 
 void GUIMyFrame::onScrollX(wxScrollEvent& event)
@@ -151,6 +182,30 @@ void GUIMyFrame::copyClick(wxCommandEvent& event)
 void GUIMyFrame::startClick(wxCommandEvent& event)
 {
 	// TODO: Implement startClick
+	if (_amplitude.size() <= 0 && _amplitude_2.size() <=0 ) {
+		wxLogMessage("You have to add source, if you want to start");
+		return;
+	}
+	m_start->SetLabel("PROCESSING");
+	flag = true;
+	flag2 = true;
+
+	int start_time = wxGetLocalTime();
+	int time_now = start_time;
+	seconds = 0;
+	timer.Start(100);
+	int time_diff = time_now - start_time;
+
+	while (time_diff <= duration) {
+		
+		
+		Draw();
+		time_now = wxGetLocalTime();
+		time_diff = time_now - start_time;
+	}
+
+	timer.Stop();
+	m_start->SetLabel("START");
 	
 }
 
@@ -181,18 +236,30 @@ void GUIMyFrame::Paint() {
 		for (unsigned j = 0; j < _points_in_y; ++j)
 		{
 			transform_vector[i].push_back(myVector(_points[i][j].x, _points[i][j].y));
-
+			
 		}
 	}
 
 #pragma omp parallel for
 	for (unsigned i = 0; i < _points.size(); ++i) {
+		
 		jmax = _points[i].size();
 		for (unsigned j = 0; j < _points[i].size(); ++j) {
+			
 			transform_vector[i][j][2] = 0;
 			for (unsigned l = 0; l < how_much; ++l) {
-				if (_amplitude.size() > 0)
+				if (_amplitude.size() > 0) {
+				
 					transform_vector[i][j][2] += _amplitude[l] * 10 * sin(0.1 * seconds - _frequency[l] * 0.01 * _distance[i * jmax + j][l]);
+					//transform_vector[i][j][2] += _amplitude_2[l] * 10 * sin(0.1 * seconds - _frequency_2[l] * 0.01 * _distance_2[i * jmax + j][l]);
+				}
+			}
+			for (unsigned l = 0; l < how_much_2; ++l) {
+				if (_amplitude_2.size() > 0) {
+					
+					//transform_vector[i][j][2] += _amplitude[l] * 10 * sin(0.1 * seconds - _frequency[l] * 0.01 * _distance[i * jmax + j][l]);
+					transform_vector[i][j][2] += _amplitude_2[l] * 10 * sin(0.1 * seconds - _frequency_2[l] * 0.01 * _distance_2[i * jmax + j][l]);
+				}
 			}
 		}
 	}
@@ -202,8 +269,11 @@ void GUIMyFrame::Paint() {
 		for (unsigned j = 0; j < _points_in_y; ++j)
 		{
 			transform_vector[i][j] = (_transform * transform_vector[i][j]);
-			for (int k = 0; k < 3; ++k)
+			for (int k = 0; k < 3; ++k) {
 				transform_vector[i][j][k] /= transform_vector[i][j][3];
+				
+			}
+			
 			_draw_points[i][j].x = transform_vector[i][j][0];
 			_draw_points[i][j].y = transform_vector[i][j][1];
 		}
@@ -214,26 +284,32 @@ void GUIMyFrame::Paint() {
 	MyDC.SetBackground(*wxWHITE_BRUSH);
 	MyDC.Clear();
 
-	MyDC.SetPen(wxPen(*wxBLACK));
+	MyDC.SetPen(wxPen(*wxBLUE));
 	wxPoint* tab;
 	std::vector<wxPoint> tmp;
 #pragma omp parallel for
 	for (unsigned i = 0; i < _points_in_x; ++i)
 	{
 		for (unsigned j = 0; j < _points_in_y - 1; ++j)
-		{
+		{	
+			
 			tmp.push_back(_draw_points[i][j]);
-			if (i + 1 < _points_in_x)
+			if (i + 1 < _points_in_x) {
 				tmp.push_back(_draw_points[i + 1][j]);
-			if (i - 1 > -1)
+			}
+			if (i - 1 > -1) {
 				tmp.push_back(_draw_points[i - 1][j]);
-			if (i - 1 > -1 && j - 1 > -1)
+			}
+			if (i - 1 > -1 && j - 1 > -1) {
 				tmp.push_back(_draw_points[i - 1][j - 1]);
+			}
 			tmp.push_back(_draw_points[i][j]);
-			if (j + 1 < _points_in_y)
+			if (j + 1 < _points_in_y) {
 				tmp.push_back(_draw_points[i][j + 1]);
-			if (i + 1 < _points_in_x && j + 1 < _points_in_y)
+			}
+			if (i + 1 < _points_in_x && j + 1 < _points_in_y) {
 				tmp.push_back(_draw_points[i + 1][j + 1]);
+			}
 
 		}
 	}
@@ -248,7 +324,11 @@ void GUIMyFrame::Paint() {
 }
 
 
+
 void GUIMyFrame::Draw() {
 	//Nie wiem czy potrzebne
 
+	Paint();
+	time += timer.GetInterval() / 100.;
+	seconds = time;
 }
