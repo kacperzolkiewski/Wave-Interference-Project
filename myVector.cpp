@@ -15,28 +15,28 @@ void myVector::set(double x, double y, double z)
     data[2] = z;
 }
 
-double& myVector::operator[] (unsigned index)
+double& myVector::operator[](unsigned index)
 {
     return data[index];
 }
 
-const double& myVector::operator[] (unsigned index) const
+const double& myVector::operator[](unsigned index) const
 {
     return data[index];
 }
 
-myVector myVector::operator+ (const myVector& obj) const
+myVector myVector::operator+(const myVector& obiect) const
 {
     myVector result;
     for (int i = 0; i < 4; ++i)
-        result[i] += data[i] + obj.data[i];
+        result[i] += data[i] + obiect.data[i];
     return result;
 }
 
-myVector myVector::operator- (const myVector& obj) const
+myVector myVector::operator-(const myVector& obiect) const
 {
     myVector result;
     for (int i = 0; i < 4; ++i)
-        result[i] += data[i] - obj.data[i];
+        result[i] += data[i] - obiect.data[i];
     return result;
 }

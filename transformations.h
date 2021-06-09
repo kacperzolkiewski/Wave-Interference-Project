@@ -1,19 +1,15 @@
 #pragma once
-
 #include "myMatrix.h"
 
-myMatrix set_rotation_x(double alpha);
+const double pi = 3.14159265359;
 
-myMatrix set_rotation_y(double alpha);
+myMatrix setRotation(double alpha_x, double alpha_y, double alpha_z);
+myMatrix setRotationX(double alpha);
+myMatrix setRotationY(double alpha);
+myMatrix setRotationZ(double alpha);
+myMatrix setTranslation(double width, double height);
+myMatrix setScale(double scale);
+myMatrix setPerspective();
 
-myMatrix set_rotation_z(double alpha);
-
-myMatrix set_rotation(double alpha_x, double alpha_y, double alpha_z);
-
-myMatrix set_scale(double scale);
-
-myMatrix set_perspective();
-
-myMatrix set_translation(double width, double height);
 
 

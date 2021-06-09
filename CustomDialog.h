@@ -50,8 +50,6 @@ protected:
 	wxTextCtrl* m_textCtrl_x;
 	wxStaticText* m_staticText_y;
 	wxTextCtrl* m_textCtrl_y;
-	//wxStaticText* m_staticText3;
-	//wxTextCtrl* m_textCtrl3;
 	wxStaticText* m_staticText_amp;
 	wxTextCtrl* m_textCtrl_amp;
 	wxStaticText* m_staticText_freq;
@@ -64,18 +62,11 @@ public:
 
 	MyDialog(wxWindow* parent = NULL, wxWindowID id = wxID_ANY, const wxString& title = "Setting Parameters", const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(365, 418), long style = wxDEFAULT_DIALOG_STYLE | wxSIMPLE_BORDER);
 	~MyDialog();
-	void updateX(wxCommandEvent& e);
-	void updateY(wxCommandEvent& e);
-	void updateAMP(wxCommandEvent& e);
-	void updateFREQ(wxCommandEvent& e);
 	bool running() const { return add; }
 	const auto getX() const { return x; }
 	const auto getY() const { return y; }
-	//const auto get_z() const { return z; }
 	const auto getAmplitude() const { return amplitude; }
 	const auto getFrequency() const { return frequency; }
-
-	
 };
 
 #endif //__NONAME_H__

@@ -33,13 +33,6 @@ MyDialog::MyDialog(wxWindow* parent, wxWindowID id, const wxString& title, const
 	m_textCtrl_y = new wxTextCtrl(sbSizer->GetStaticBox(), ID_WXEDIT_Y, wxEmptyString, wxPoint(15, 120), wxDefaultSize, 0);
 	sbSizer->Add(m_textCtrl_y, 0, wxALL, 5);
 
-//	m_staticText3 = new wxStaticText(sbSizer->GetStaticBox(), wxID_ANY, wxT("Set Z"), wxDefaultPosition, wxDefaultSize, 0);
-	//m_staticText3->Wrap(-1);
-	//sbSizer->Add(m_staticText3, 0, wxALL, 5);
-
-	//m_textCtrl3 = new wxTextCtrl(sbSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
-	//sbSizer->Add(m_textCtrl3, 0, wxALL, 5);
-
 	m_staticText_amp = new wxStaticText(sbSizer->GetStaticBox(), ID_WXEDIT_AMP, wxT("Amplitude [m]"), wxDefaultPosition, wxDefaultSize, 0);
 	m_staticText_amp->Wrap(-1);
 	sbSizer->Add(m_staticText_amp, 0, wxALL, 5);
@@ -54,13 +47,7 @@ MyDialog::MyDialog(wxWindow* parent, wxWindowID id, const wxString& title, const
 	m_textCtrl_freq = new wxTextCtrl(sbSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxPoint(15, 240), wxDefaultSize, 0);
 	sbSizer->Add(m_textCtrl_freq, 0, wxALL, 5);
 
-
 	vertSizer->Add(sbSizer, 4, wxALIGN_CENTER_HORIZONTAL | wxALL | wxSHAPED, 5);
-
-	Bind(wxEVT_TEXT, &MyDialog::updateX, this, ID_WXEDIT_X);
-	Bind(wxEVT_TEXT, &MyDialog::updateY, this, ID_WXEDIT_Y);
-	Bind(wxEVT_TEXT, &MyDialog::updateAMP, this, ID_WXEDIT_AMP);
-	Bind(wxEVT_TEXT, &MyDialog::updateFREQ, this, ID_WXEDIT_FREQ);
 
 	m_sdbSizer1 = new wxStdDialogButtonSizer();
 	m_sdbSizer_OK = new wxButton(this, wxID_OK);
@@ -93,11 +80,6 @@ MyDialog::MyDialog(wxWindow* parent, wxWindowID id, const wxString& title, const
 		wxLogMessage("Given wrong parameter!!!");
 	}
 
-	//z = wxAtof(m_textCtrl3->GetValue());
-	//if (z < 0.0 or z > 1000.0) {
-		//flag = false;
-		//wxLogMessage("Given wrong parameter!!!");
-	//}
 	if (m_textCtrl_amp) amplitude = wxAtof(m_textCtrl_amp->GetValue());
 
 	if (amplitude < 0 || amplitude > 9.999) {
@@ -111,38 +93,11 @@ MyDialog::MyDialog(wxWindow* parent, wxWindowID id, const wxString& title, const
 		add = false;
 		wxLogMessage("Given wrong parameter!!!");
 	}
-
-	
-
 }
 
 MyDialog::~MyDialog()
 {
 	Destroy();
-}
-
-
-//////////////////////////////////////////
-//Controlling and Updating Parameters
-//////////////////////////////////////////
-void MyDialog::updateX(wxCommandEvent& e )
-{
-	
-}
-
-void MyDialog::updateY(wxCommandEvent& e)
-{
-	
-}
-
-void MyDialog::updateAMP(wxCommandEvent& e)
-{
-	
-}
-
-void MyDialog::updateFREQ(wxCommandEvent& e)
-{
-	
 }
 
 

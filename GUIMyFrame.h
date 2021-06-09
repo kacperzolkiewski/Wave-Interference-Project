@@ -70,21 +70,21 @@ public:
 	double scaleX, scaleY;
 	unsigned pointsX, pointsY;
 
-	std::vector<std::vector<wxPoint>> points1;
-	std::vector<std::vector<wxPoint>> drawPoints1;
+	std::vector<std::vector<wxPoint>> points;
+	std::vector<std::vector<wxPoint>> drawPoints;
 	std::vector<std::vector<double>> points1Distance;
 	std::vector<double> points1Amplitude;
 	std::vector<double> points1Frequency;
 	unsigned counter1 = 0;
 	bool flag1 = true;
 	
-	std::vector<std::vector<wxPoint>> points2;
-	std::vector<std::vector<wxPoint>> drawPoints2;
 	std::vector<std::vector<double>> points2Distance;
 	std::vector<double> points2Amplitude;
 	std::vector<double> points2Frequency;
 	unsigned counter2 = 0;
 	bool flag2 = true;
 };
+
+void clearDistance(std::vector<std::vector<wxPoint>> &points, std::vector<std::vector<double>> &pointsDistance);
 
 #endif // __GUIMyFrame__
