@@ -34,7 +34,7 @@
 class MyDialog : public wxDialog
 {
 private:
-	bool add = true;
+	bool added = true;
 	double x, y, amplitude, frequency;
 
 	enum
@@ -46,7 +46,7 @@ private:
 	};
 
 protected:
-	wxStaticText* m_staticText_x;	
+	wxStaticText* m_staticText_x;
 	wxTextCtrl* m_textCtrl_x;
 	wxStaticText* m_staticText_y;
 	wxTextCtrl* m_textCtrl_y;
@@ -62,7 +62,7 @@ public:
 
 	MyDialog(wxWindow* parent = NULL, wxWindowID id = wxID_ANY, const wxString& title = "Setting Parameters", const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(365, 418), long style = wxDEFAULT_DIALOG_STYLE | wxSIMPLE_BORDER);
 	~MyDialog();
-	bool running() const { return add; }
+	bool running() const { return added; }
 	const auto getX() const { return x; }
 	const auto getY() const { return y; }
 	const auto getAmplitude() const { return amplitude; }

@@ -52,12 +52,12 @@ public:
 	GUIMyFrame(wxWindow* parent);
 
 	void Paint();
-	void Draw();
 	void scroll();
+	void initializeVec(unsigned, unsigned, double, double);
 	double measureDistance(const double x1, const  double y1, const  double x2, const  double y2);
-	void addSource(std::vector<std::vector<wxPoint>> &points, std::vector<std::vector<double>> &pointsDistance, 
-		std::vector<double> &pointsAmplitude, std::vector<double> &pointsFrequency, bool &flag, unsigned &counter);
-
+	void addSource(std::vector<std::vector<wxPoint>>& points, std::vector<std::vector<double>>& pointsDistance,
+		std::vector<double>& pointsAmplitude, std::vector<double>& pointsFrequency, bool& flag, unsigned& counter);
+	void clearDistance(std::vector<std::vector<wxPoint>>& points, std::vector<std::vector<double>>& pointsDistance, std::vector<double>&, std::vector<double>&, unsigned& counter);
 
 	wxImage interferenceImage;
 	wxBitmap myBuffer;
@@ -77,14 +77,15 @@ public:
 	std::vector<double> points1Frequency;
 	unsigned counter1 = 0;
 	bool flag1 = true;
-	
+
 	std::vector<std::vector<double>> points2Distance;
 	std::vector<double> points2Amplitude;
 	std::vector<double> points2Frequency;
 	unsigned counter2 = 0;
 	bool flag2 = true;
+	
 };
 
-void clearDistance(std::vector<std::vector<wxPoint>> &points, std::vector<std::vector<double>> &pointsDistance);
+
 
 #endif // __GUIMyFrame__

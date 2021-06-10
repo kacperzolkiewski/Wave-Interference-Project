@@ -19,28 +19,28 @@ MyDialog::MyDialog(wxWindow* parent, wxWindowID id, const wxString& title, const
 	wxStaticBoxSizer* sbSizer;
 	sbSizer = new wxStaticBoxSizer(new wxStaticBox(this, wxID_ANY, wxT("Parameters")), wxVERTICAL);
 
-	m_staticText_x = new wxStaticText(sbSizer->GetStaticBox(), wxID_ANY, wxT("Set X (0-1000)"), wxDefaultPosition, wxDefaultSize, 0);
+	m_staticText_x = new wxStaticText(sbSizer->GetStaticBox(), wxID_ANY, wxT("Set X (0-556)"), wxDefaultPosition, wxDefaultSize, 0);
 	m_staticText_x->Wrap(-1);
 	sbSizer->Add(m_staticText_x, 0, wxALL, 5);
 
 	m_textCtrl_x = new wxTextCtrl(sbSizer->GetStaticBox(), ID_WXEDIT_X, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
 	sbSizer->Add(m_textCtrl_x, 0, wxALL, 5);
 
-	m_staticText_y = new wxStaticText(sbSizer->GetStaticBox(), wxID_ANY, wxT("Set Y (0-1000)"), wxDefaultPosition, wxDefaultSize, 0);
+	m_staticText_y = new wxStaticText(sbSizer->GetStaticBox(), wxID_ANY, wxT("Set Y (0-361)"), wxDefaultPosition, wxDefaultSize, 0);
 	m_staticText_y->Wrap(-1);
 	sbSizer->Add(m_staticText_y, 0, wxALL, 5);
 
 	m_textCtrl_y = new wxTextCtrl(sbSizer->GetStaticBox(), ID_WXEDIT_Y, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
 	sbSizer->Add(m_textCtrl_y, 0, wxALL, 5);
 
-	m_staticText_amp = new wxStaticText(sbSizer->GetStaticBox(), ID_WXEDIT_AMP, wxT("Amplitude (0-9.9999)"), wxDefaultPosition, wxDefaultSize, 0);
+	m_staticText_amp = new wxStaticText(sbSizer->GetStaticBox(), ID_WXEDIT_AMP, wxT("Amplitude (0-9.999)"), wxDefaultPosition, wxDefaultSize, 0);
 	m_staticText_amp->Wrap(-1);
 	sbSizer->Add(m_staticText_amp, 0, wxALL, 5);
 
 	m_textCtrl_amp = new wxTextCtrl(sbSizer->GetStaticBox(), ID_WXEDIT_FREQ, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
 	sbSizer->Add(m_textCtrl_amp, 0, wxALL, 5);
 
-	m_staticText_freq = new wxStaticText(sbSizer->GetStaticBox(), wxID_ANY, wxT("Frequency (0-9.9999)"), wxDefaultPosition, wxDefaultSize, 0);
+	m_staticText_freq = new wxStaticText(sbSizer->GetStaticBox(), wxID_ANY, wxT("Frequency (0-9.999)"), wxDefaultPosition, wxDefaultSize, 0);
 	m_staticText_freq->Wrap(-1);
 	sbSizer->Add(m_staticText_freq, 0, wxALL, 5);
 
@@ -66,39 +66,41 @@ MyDialog::MyDialog(wxWindow* parent, wxWindowID id, const wxString& title, const
 
 	this->ShowModal();
 
-	
+
 	if (m_textCtrl_x) x = wxAtof(m_textCtrl_x->GetValue());
 
-	if (x < 0.0 || x > 1000.0) {
-		add = false;
+	if (x < 0.0 || x > 556.0) {
+		added = false;
 		wxLogMessage("Given wrong parameter x!");
 	}
 
 	if (m_textCtrl_y) y = wxAtof(m_textCtrl_y->GetValue());
 
-	if (y < 0.0 or y > 1000.0) {
-		add = false;
+	if (y < 0.0 or y > 361.0) {
+		added = false;
 		wxLogMessage("Given wrong parameter y!");
 	}
 
 	if (m_textCtrl_amp) amplitude = wxAtof(m_textCtrl_amp->GetValue());
 
 	if (amplitude < 0 || amplitude > 9.999) {
-		add = false;
+		added = false;
 		wxLogMessage("Given wrong parameter amplitude!");
 	}
 
 	if (m_textCtrl_freq) frequency = wxAtof(m_textCtrl_freq->GetValue());
 
 	if (frequency < 0 || frequency > 9.999) {
-		add = false;
+		added = false;
 		wxLogMessage("Given wrong parameter frequency!");
 	}
+
+	Destroy();
 }
 
 MyDialog::~MyDialog()
 {
-	Destroy();
+	
 }
 
 

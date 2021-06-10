@@ -7,15 +7,26 @@ GUIMyFrame::GUIMyFrame(wxWindow* parent)
 	MyFrame2(parent), myClient(m_panel2)
 {
 	wxInitAllImageHandlers();
+	wxSize panelSize = m_panel2->GetSize();
 
-	wxSize XY = m_panel2->GetSize();
+	pointsX = panelSize.x / 8;
+	pointsY = panelSize.y / 8;
 
-	int x_max = XY.x;
-	int y_max = XY.y;
-	pointsX = XY.x / 4;
-	pointsY = XY.y / 4;
-	scaleX = x_max / static_cast<double>(pointsX);
-	scaleY = y_max / static_cast<double>(pointsY);
+	scaleX = (panelSize.x - 90) / static_cast<double>(pointsX);
+	scaleY = (panelSize.y - 90) / static_cast<double>(pointsY);
+
+	initializeVec(pointsX, pointsY, scaleX, scaleY);
+
+	int x = m_sliderX->GetValue() * 6;
+	int y = m_sliderY->GetValue() * 3.5;
+	int z = m_sliderZ->GetValue() * 4.5;
+
+	transformMatrix = setPerspective() * setScale(1.0) * setRotation(x, y, z) *
+		setTranslation(-static_cast<double>(pointsX * (scaleX) / 2.0),
+			-static_cast<double>(pointsY * (scaleY) / 2.0));
+}
+
+void GUIMyFrame::initializeVec(unsigned pointsX, unsigned pointsY, double scaleX, double scaleY) {
 
 	for (unsigned i = 0; i < pointsX; ++i) {
 
@@ -31,14 +42,6 @@ GUIMyFrame::GUIMyFrame(wxWindow* parent)
 
 	}
 
-
-	int x = m_sliderX->GetValue() * 6;
-	int y = m_sliderY->GetValue() * 3.5;
-	int z = m_sliderZ->GetValue() * 4.5;
-
-	transformMatrix = setPerspective() * setScale(1.0) * setRotation(x, y, z) *
-		setTranslation(-static_cast<double>(pointsX * (scaleX) / 2.0),
-			-static_cast<double>(pointsY * (scaleY) / 2.0));
 }
 
 void GUIMyFrame::onUpdateUI(wxUpdateUIEvent& event)
@@ -49,6 +52,7 @@ void GUIMyFrame::onUpdateUI(wxUpdateUIEvent& event)
 void GUIMyFrame::saveToFileClick(wxCommandEvent& event)
 {
 	wxFileDialog fileDialog(this, "", "", "", "PNG files (*.png)|*.png|JPG files (*.jpg)|*.jpg", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+	
 	interferenceImage = myBuffer.ConvertToImage();
 
 	if (fileDialog.ShowModal() == wxID_CANCEL) return;
@@ -71,18 +75,21 @@ void GUIMyFrame::on_addSource2Click(wxCommandEvent& event)
 void GUIMyFrame::addSource(std::vector<std::vector<wxPoint>>& points, std::vector<std::vector<double>>& pointsDistance,
 	std::vector<double>& pointsAmplitude, std::vector<double>& pointsFrequency, bool& flag, unsigned& counter)
 {
-	clearDistance(points, pointsDistance);
+
+	clearDistance(points, pointsDistance ,pointsAmplitude, pointsFrequency, counter);
 
 	MyDialog* dialog = new MyDialog();
 	dialog->Show(true);
-	unsigned max = 0;
+	
 
 	if (dialog->running()) {
+
+		unsigned temp = 0;
 		counter++;
 		for (unsigned i = 0; i < points.size(); ++i) {
-			max = points[i].size();
+			temp = points[i].size();
 			for (unsigned j = 0; j < points[i].size(); ++j) {
-				pointsDistance[i * max + j].push_back(measureDistance(points[i][j].x,
+				pointsDistance[i * temp + j].push_back(measureDistance(points[i][j].x,
 					points[i][j].y, dialog->getX(), dialog->getY()));
 			}
 		}
@@ -107,7 +114,7 @@ void GUIMyFrame::onScrollZ(wxScrollEvent& event)
 	scroll();
 }
 
-void GUIMyFrame::scroll() 
+void GUIMyFrame::scroll()
 {
 	int x = m_sliderX->GetValue() * 6;
 	int y = m_sliderY->GetValue() * 3.5;
@@ -149,18 +156,24 @@ void GUIMyFrame::startClick(wxCommandEvent& event)
 	}
 
 	m_start->SetLabel("SIMULATING");
-	flag1 = true;
-	flag2 = true;
+	flag2 = flag1 = true;
 
 	long startTime = wxGetLocalTime();
 	long actualTime = startTime;
-	long timeDiffrence = actualTime - startTime;
+
+
+	long timeDiffrence = 0;
 	seconds = 0;
 	timer.Start(100);
 
 	while (timeDiffrence <= duration) {
-		Draw();
+
+		Paint();
+		time += timer.GetInterval() / 100.0;
+		seconds = time;
+
 		actualTime = wxGetLocalTime();
+
 		timeDiffrence = actualTime - startTime;
 	}
 
@@ -179,17 +192,8 @@ void GUIMyFrame::resetClick(wxCommandEvent& event)
 			-static_cast<double>(pointsY * (scaleY) / 2.0));
 
 
-	clearDistance(points, points1Distance);
-	clearDistance(points, points2Distance);
-	
-	counter1 = 0;
-	counter2 = 0;
-	seconds = 0;
-
-	points1Amplitude.clear();
-	points2Amplitude.clear();
-	points1Frequency.clear();
-	points2Frequency.clear();
+	clearDistance(points, points1Distance, points1Amplitude, points1Frequency, counter1);
+	clearDistance(points, points2Distance, points2Amplitude, points2Frequency, counter2);
 
 	Paint();
 }
@@ -201,9 +205,9 @@ double GUIMyFrame::measureDistance(const double x1, const  double y1, const  dou
 
 void GUIMyFrame::Paint() {
 
-	int k = 0;
-	int max = 0;
 	std::vector<std::vector<myVector>> transformation;
+
+	int tempSize = 0;
 
 #pragma omp parallel for
 	for (unsigned i = 0; i < pointsX; ++i) {
@@ -218,19 +222,19 @@ void GUIMyFrame::Paint() {
 #pragma omp parallel for
 	for (unsigned i = 0; i < points.size(); ++i) {
 
-		max = points[i].size();
+		tempSize = points[i].size();
 		for (unsigned j = 0; j < points[i].size(); ++j) {
 
 			transformation[i][j][2] = 0;
 			for (unsigned l = 0; l < counter1; ++l) {
 				if (points1Amplitude.size() > 0) {
-					transformation[i][j][2] += points1Amplitude[l] * 10 * sin(0.1 * seconds - points1Frequency[l] * 0.01 * points1Distance[i * max + j][l]);
+					transformation[i][j][2] += points1Amplitude[l] * 10 * sin(0.1 * seconds - points1Frequency[l] * 0.01 * points1Distance[i * tempSize + j][l]);
 				}
 			}
 
 			for (unsigned l = 0; l < counter2; ++l) {
 				if (points2Amplitude.size() > 0) {
-					transformation[i][j][2] += points2Amplitude[l] * 10 * sin(0.1 * seconds - points2Frequency[l] * 0.01 * points2Distance[i * max + j][l]);
+					transformation[i][j][2] += points2Amplitude[l] * 10 * sin(0.1 * seconds - points2Frequency[l] * 0.01 * points2Distance[i * tempSize + j][l]);
 				}
 			}
 		}
@@ -250,14 +254,7 @@ void GUIMyFrame::Paint() {
 			drawPoints[i][j].y = transformation[i][j][1];
 		}
 	}
-
-	myBuffer = wxBitmap(m_panel2->GetSize().x, m_panel2->GetSize().y);
-	wxBufferedDC MyDC(&myClient, myBuffer);
-	MyDC.SetBackground(*wxWHITE_BRUSH);
-	MyDC.Clear();
-	MyDC.SetPen(wxPen(*wxBLUE));
-
-	wxPoint* tab;
+	
 	std::vector<wxPoint> tempVector;
 
 #pragma omp parallel for
@@ -287,25 +284,33 @@ void GUIMyFrame::Paint() {
 		}
 	}
 
+	myBuffer = wxBitmap(m_panel2->GetSize().x, m_panel2->GetSize().y);
+	wxBufferedDC MyDC(&myClient, myBuffer);
+
+	MyDC.SetBackground(*wxWHITE_BRUSH);
+	MyDC.Clear();
+	MyDC.SetPen(wxPen(*wxBLUE));
+
+	wxPoint* tab = tempVector.data();
 	tempVector.push_back(drawPoints[pointsX - 1][pointsY - 1]);
-	tab = tempVector.data();
-	unsigned size = tempVector.size();
-	wxSize XY = m_panel2->GetSize();
 	
-	MyDC.DrawLines(size, tab, 320, 220);
+	MyDC.DrawLines(tempVector.size(), tab, 320, 220);
 }
 
-void GUIMyFrame::Draw() {
-	Paint();
-	time += timer.GetInterval() / 100.0;
-	seconds = time;
-}
 
-void clearDistance(std::vector<std::vector<wxPoint>> &points, std::vector<std::vector<double>> &pointsDistance) {
+void GUIMyFrame::clearDistance(std::vector<std::vector<wxPoint>>& points, std::vector<std::vector<double>>& pointsDistance, std::vector<double>& pointsAmplitude, std::vector<double>& pointsFrequency, unsigned& counter) {
+	
 	for (unsigned i = 0; i < points.size(); ++i) {
-		unsigned max = points[i].size();
+		unsigned tempSize = points[i].size();
 		for (unsigned j = 0; j < points[i].size(); ++j) {
-			pointsDistance[i * max + j].clear();
+			pointsDistance[i * tempSize + j].clear();
 		}
 	}
+
+	counter = 0;
+	
+
+	pointsAmplitude.clear();
+	pointsFrequency.clear();
+
 }
