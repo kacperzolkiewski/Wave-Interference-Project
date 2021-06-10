@@ -10,10 +10,10 @@ GUIMyFrame::GUIMyFrame(wxWindow* parent)
 
 	wxSize XY = m_panel2->GetSize();
 
-	int x_max = (XY.x - 90);
-	int y_max = (XY.y - 90);
-	pointsX = XY.x / 6;
-	pointsY = XY.y / 6;
+	int x_max = XY.x;
+	int y_max = XY.y;
+	pointsX = XY.x / 4;
+	pointsY = XY.y / 4;
 	scaleX = x_max / static_cast<double>(pointsX);
 	scaleY = y_max / static_cast<double>(pointsY);
 
@@ -75,7 +75,7 @@ void GUIMyFrame::addSource(std::vector<std::vector<wxPoint>>& points, std::vecto
 
 	MyDialog* dialog = new MyDialog();
 	dialog->Show(true);
-	int max = 0;
+	unsigned max = 0;
 
 	if (dialog->running()) {
 		counter++;
@@ -90,12 +90,6 @@ void GUIMyFrame::addSource(std::vector<std::vector<wxPoint>>& points, std::vecto
 		pointsFrequency.push_back(dialog->getFrequency());
 		flag = false;
 	}
-
-	wxLogMessage("Wybrane przez Ciebie parametry (x, y, amplitude, frequency) to: "
-		+ wxString::Format(wxT("%f.2"), dialog->getX()) + " "
-		+ wxString::Format(wxT("%f.2"), dialog->getY()) + " "
-		+ wxString::Format(wxT("%f.2"), dialog->getAmplitude()) + " "
-		+ wxString::Format(wxT("%f.2"), dialog->getFrequency()));
 }
 
 void GUIMyFrame::onScrollX(wxScrollEvent& event)
@@ -158,9 +152,9 @@ void GUIMyFrame::startClick(wxCommandEvent& event)
 	flag1 = true;
 	flag2 = true;
 
-	int startTime = wxGetLocalTime();
-	int actualTime = startTime;
-	int timeDiffrence = actualTime - startTime;
+	long startTime = wxGetLocalTime();
+	long actualTime = startTime;
+	long timeDiffrence = actualTime - startTime;
 	seconds = 0;
 	timer.Start(100);
 
@@ -201,7 +195,7 @@ void GUIMyFrame::resetClick(wxCommandEvent& event)
 }
 
 
-double GUIMyFrame::measureDistance(double x1, double y1, double x2, double y2) {
+double GUIMyFrame::measureDistance(const double x1, const  double y1, const  double x2, const  double y2) {
 	return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 }
 
@@ -210,6 +204,7 @@ void GUIMyFrame::Paint() {
 	int k = 0;
 	int max = 0;
 	std::vector<std::vector<myVector>> transformation;
+
 #pragma omp parallel for
 	for (unsigned i = 0; i < pointsX; ++i) {
 		transformation.push_back(std::vector<myVector>());
@@ -246,7 +241,7 @@ void GUIMyFrame::Paint() {
 		for (unsigned j = 0; j < pointsY; ++j)
 		{
 			transformation[i][j] = (transformMatrix * transformation[i][j]);
-			for (int k = 0; k < 3; ++k) {
+			for (unsigned k = 0; k < 3; ++k) {
 				transformation[i][j][k] /= transformation[i][j][3];
 
 			}
@@ -294,9 +289,9 @@ void GUIMyFrame::Paint() {
 
 	tempVector.push_back(drawPoints[pointsX - 1][pointsY - 1]);
 	tab = tempVector.data();
-	int size = tempVector.size();
+	unsigned size = tempVector.size();
 	wxSize XY = m_panel2->GetSize();
-
+	
 	MyDC.DrawLines(size, tab, 320, 220);
 }
 
@@ -308,7 +303,7 @@ void GUIMyFrame::Draw() {
 
 void clearDistance(std::vector<std::vector<wxPoint>> &points, std::vector<std::vector<double>> &pointsDistance) {
 	for (unsigned i = 0; i < points.size(); ++i) {
-		int max = points[i].size();
+		unsigned max = points[i].size();
 		for (unsigned j = 0; j < points[i].size(); ++j) {
 			pointsDistance[i * max + j].clear();
 		}

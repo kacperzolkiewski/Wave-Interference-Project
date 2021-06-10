@@ -54,7 +54,7 @@ public:
 	void Paint();
 	void Draw();
 	void scroll();
-	double measureDistance(double x1, double y1, double x2, double y2);
+	double measureDistance(const double x1, const  double y1, const  double x2, const  double y2);
 	void addSource(std::vector<std::vector<wxPoint>> &points, std::vector<std::vector<double>> &pointsDistance, 
 		std::vector<double> &pointsAmplitude, std::vector<double> &pointsFrequency, bool &flag, unsigned &counter);
 

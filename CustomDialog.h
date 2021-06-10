@@ -46,7 +46,7 @@ private:
 	};
 
 protected:
-	wxStaticText* m_staticText_x;
+	wxStaticText* m_staticText_x;	
 	wxTextCtrl* m_textCtrl_x;
 	wxStaticText* m_staticText_y;
 	wxTextCtrl* m_textCtrl_y;
@@ -54,7 +54,7 @@ protected:
 	wxTextCtrl* m_textCtrl_amp;
 	wxStaticText* m_staticText_freq;
 	wxTextCtrl* m_textCtrl_freq;
-	wxStdDialogButtonSizer* m_sdbSizer1;
+	wxStdDialogButtonSizer* m_sdbSizer_OK_CANCEL;
 	wxButton* m_sdbSizer_OK;
 	wxButton* m_sdbSizer_Cancel;
 
