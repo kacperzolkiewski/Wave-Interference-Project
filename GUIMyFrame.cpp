@@ -291,10 +291,10 @@ void GUIMyFrame::Paint() {
 	MyDC.Clear();
 	MyDC.SetPen(wxPen(*wxBLUE));
 
-	wxPoint* tab = tempVector.data();
+	
 	tempVector.push_back(drawPoints[pointsX - 1][pointsY - 1]);
 	
-	MyDC.DrawLines(tempVector.size(), tab, 320, 220);
+	MyDC.DrawLines(tempVector.size(), tempVector.data(), 320, 220);
 }
 
 
