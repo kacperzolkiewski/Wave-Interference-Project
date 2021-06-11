@@ -2,6 +2,7 @@
 
 myVector::myVector(double x, double y, double z)
 {
+    data = std::vector<double>(4);
     data[0] = x;
     data[1] = y;
     data[2] = z;

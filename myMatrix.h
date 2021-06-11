@@ -1,5 +1,4 @@
 #pragma once
-#include <array>
 #include "myVector.h"
 
 class myMatrix
@@ -7,10 +6,10 @@ class myMatrix
 public:
     myMatrix();
 
-    std::array<double, 4>& operator[](unsigned index);
-    std::array<double, 4> operator[](unsigned index) const;
+    std::vector<double>& operator[](unsigned index);
+    std::vector<double> operator[](unsigned index) const;
     myMatrix operator*(const myMatrix& obiect) const;
     myVector operator*(const myVector& obiect) const;
 public:
-    std::array<std::array<double, 4>, 4> data;
+    std::vector<std::vector<double>> data;
 };

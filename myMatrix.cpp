@@ -2,18 +2,21 @@
 
 myMatrix::myMatrix()
 {
-    for (int i = 0; i < 4; ++i)
+    data = std::vector<std::vector<double>>(4);
+    for (int i = 0; i < 4; ++i) {
+        data[i] = std::vector<double>(4);
         for (int j = 0; j < 4; ++j)
             data[i][j] = 0.0;
+    }
     data[3][3] = 1.0;
 }
 
-std::array<double, 4>& myMatrix::operator[](unsigned index)
+std::vector<double>& myMatrix::operator[](unsigned index)
 {
     return data[index];
 }
 
-std::array<double, 4> myMatrix::operator[](unsigned index) const
+std::vector<double> myMatrix::operator[](unsigned index) const
 {
     return data[index];
 }

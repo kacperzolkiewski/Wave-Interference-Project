@@ -75,7 +75,6 @@ void GUIMyFrame::on_addSource2Click(wxCommandEvent& event)
 void GUIMyFrame::addSource(std::vector<std::vector<wxPoint>>& points, std::vector<std::vector<double>>& pointsDistance,
 	std::vector<double>& pointsAmplitude, std::vector<double>& pointsFrequency, bool& flag, unsigned& counter)
 {
-
 	clearDistance(points, pointsDistance ,pointsAmplitude, pointsFrequency, counter);
 
 	MyDialog* dialog = new MyDialog();
@@ -160,20 +159,17 @@ void GUIMyFrame::startClick(wxCommandEvent& event)
 
 	long startTime = wxGetLocalTime();
 	long actualTime = startTime;
-
-
 	long timeDiffrence = 0;
+
 	seconds = 0;
 	timer.Start(100);
 
 	while (timeDiffrence <= duration) {
-
 		Paint();
 		time += timer.GetInterval() / 100.0;
 		seconds = time;
 
 		actualTime = wxGetLocalTime();
-
 		timeDiffrence = actualTime - startTime;
 	}
 
@@ -203,8 +199,8 @@ double GUIMyFrame::measureDistance(const double x1, const  double y1, const  dou
 	return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 }
 
-void GUIMyFrame::Paint() {
-
+void GUIMyFrame::Paint()
+{
 	std::vector<std::vector<myVector>> transformation;
 
 	int tempSize = 0;
@@ -291,15 +287,14 @@ void GUIMyFrame::Paint() {
 	MyDC.Clear();
 	MyDC.SetPen(wxPen(*wxBLUE));
 
-	
 	tempVector.push_back(drawPoints[pointsX - 1][pointsY - 1]);
 	
 	MyDC.DrawLines(tempVector.size(), tempVector.data(), 320, 220);
 }
 
 
-void GUIMyFrame::clearDistance(std::vector<std::vector<wxPoint>>& points, std::vector<std::vector<double>>& pointsDistance, std::vector<double>& pointsAmplitude, std::vector<double>& pointsFrequency, unsigned& counter) {
-	
+void GUIMyFrame::clearDistance(std::vector<std::vector<wxPoint>>& points, std::vector<std::vector<double>>& pointsDistance, std::vector<double>& pointsAmplitude, std::vector<double>& pointsFrequency, unsigned& counter) 
+{
 	for (unsigned i = 0; i < points.size(); ++i) {
 		unsigned tempSize = points[i].size();
 		for (unsigned j = 0; j < points[i].size(); ++j) {
@@ -308,9 +303,7 @@ void GUIMyFrame::clearDistance(std::vector<std::vector<wxPoint>>& points, std::v
 	}
 
 	counter = 0;
-	
 
 	pointsAmplitude.clear();
 	pointsFrequency.clear();
-
 }

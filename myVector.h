@@ -1,5 +1,5 @@
 #pragma once
-#include <array>
+#include <vector>
 
 class myVector
 {
@@ -12,5 +12,5 @@ public:
     myVector operator+(const myVector& obiect) const;
     myVector operator-(const myVector& obiect) const;
 private:
-    std::array<double, 4> data;
+    std::vector<double> data;
 };
