@@ -34,7 +34,7 @@
 class MyDialog : public wxDialog
 {
 private:
-	bool add = true;
+	bool added = true;
 	double x, y, amplitude, frequency;
 
 	enum
@@ -50,13 +50,11 @@ protected:
 	wxTextCtrl* m_textCtrl_x;
 	wxStaticText* m_staticText_y;
 	wxTextCtrl* m_textCtrl_y;
-	//wxStaticText* m_staticText3;
-	//wxTextCtrl* m_textCtrl3;
 	wxStaticText* m_staticText_amp;
 	wxTextCtrl* m_textCtrl_amp;
 	wxStaticText* m_staticText_freq;
 	wxTextCtrl* m_textCtrl_freq;
-	wxStdDialogButtonSizer* m_sdbSizer1;
+	wxStdDialogButtonSizer* m_sdbSizer_OK_CANCEL;
 	wxButton* m_sdbSizer_OK;
 	wxButton* m_sdbSizer_Cancel;
 
@@ -64,18 +62,11 @@ public:
 
 	MyDialog(wxWindow* parent = NULL, wxWindowID id = wxID_ANY, const wxString& title = "Setting Parameters", const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(365, 418), long style = wxDEFAULT_DIALOG_STYLE | wxSIMPLE_BORDER);
 	~MyDialog();
-	void updateX(wxCommandEvent& e);
-	void updateY(wxCommandEvent& e);
-	void updateAMP(wxCommandEvent& e);
-	void updateFREQ(wxCommandEvent& e);
-	bool running() const { return add; }
-	const auto get_x() const { return x; }
-	const auto get_y() const { return y; }
-	//const auto get_z() const { return z; }
-	const auto get_amplitude() const { return amplitude; }
-	const auto get_frequency() const { return frequency; }
-
-	
+	bool running() const { return added; }
+	const auto getX() const { return x; }
+	const auto getY() const { return y; }
+	const auto getAmplitude() const { return amplitude; }
+	const auto getFrequency() const { return frequency; }
 };
 
 #endif //__NONAME_H__
